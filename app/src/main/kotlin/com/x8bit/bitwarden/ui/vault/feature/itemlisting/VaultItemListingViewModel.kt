@@ -2404,7 +2404,9 @@ class VaultItemListingViewModel @Inject constructor(
     }
 
     private fun shouldShowTrustPrompt(error: ValidateOriginResult.Error): Boolean =
-        error is ValidateOriginResult.Error.PrivilegedAppNotAllowed
+        error is ValidateOriginResult.Error.PrivilegedAppNotAllowed ||
+            error is ValidateOriginResult.Error.PasskeyNotSupportedForApp ||
+            error is ValidateOriginResult.Error.AssetLinkNotFound
 
     private fun handleFido2AssertionDataReceive(
         action: VaultItemListingsAction.Internal.Fido2AssertionDataReceive,

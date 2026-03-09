@@ -3337,7 +3337,7 @@ class VaultItemListingViewModelTest : BaseViewModelTest() {
 
     @Suppress("MaxLineLength")
     @Test
-    fun `ValidateOriginResult should update dialog state on PasskeyNotSupportedForApp error`() =
+    fun `ValidateOriginResult should show TrustPrivilegedAddPrompt dialog on PasskeyNotSupportedForApp error`() =
         runTest {
             specialCircumstanceManager.specialCircumstance =
                 SpecialCircumstance.ProviderCreateCredential(
@@ -3354,9 +3354,11 @@ class VaultItemListingViewModelTest : BaseViewModelTest() {
             val viewModel = createVaultItemListingViewModel()
 
             assertEquals(
-                VaultItemListingState.DialogState.CredentialManagerOperationFail(
-                    BitwardenString.an_error_has_occurred.asText(),
-                    BitwardenString.passkeys_not_supported_for_this_app.asText(),
+                VaultItemListingState.DialogState.TrustPrivilegedAddPrompt(
+                    message = BitwardenString
+                        .passkey_operation_failed_because_browser_x_is_not_trusted
+                        .asText("mockPackageName"),
+                    selectedCipherId = null,
                 ),
                 viewModel.stateFlow.value.dialogState,
             )
@@ -3364,7 +3366,7 @@ class VaultItemListingViewModelTest : BaseViewModelTest() {
 
     @Suppress("MaxLineLength")
     @Test
-    fun `ValidateOriginResult should update dialog state on AssetLinkNotFound error`() =
+    fun `ValidateOriginResult should show TrustPrivilegedAddPrompt dialog on AssetLinkNotFound error`() =
         runTest {
             specialCircumstanceManager.specialCircumstance =
                 SpecialCircumstance.ProviderCreateCredential(
@@ -3381,9 +3383,11 @@ class VaultItemListingViewModelTest : BaseViewModelTest() {
             val viewModel = createVaultItemListingViewModel()
 
             assertEquals(
-                VaultItemListingState.DialogState.CredentialManagerOperationFail(
-                    BitwardenString.an_error_has_occurred.asText(),
-                    BitwardenString.passkey_operation_failed_because_of_missing_asset_links.asText(),
+                VaultItemListingState.DialogState.TrustPrivilegedAddPrompt(
+                    message = BitwardenString
+                        .passkey_operation_failed_because_browser_x_is_not_trusted
+                        .asText("mockPackageName"),
+                    selectedCipherId = null,
                 ),
                 viewModel.stateFlow.value.dialogState,
             )
