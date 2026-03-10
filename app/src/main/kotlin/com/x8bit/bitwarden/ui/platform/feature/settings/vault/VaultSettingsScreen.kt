@@ -34,6 +34,7 @@ import com.bitwarden.ui.platform.components.card.BitwardenActionCard
 import com.bitwarden.ui.platform.components.card.actionCardExitAnimation
 import com.bitwarden.ui.platform.components.model.CardStyle
 import com.bitwarden.ui.platform.components.row.BitwardenTextRow
+import com.bitwarden.ui.platform.components.checkbox.BitwardenCheckboxRow
 import com.bitwarden.ui.platform.components.scaffold.BitwardenScaffold
 import com.bitwarden.ui.platform.components.snackbar.BitwardenSnackbarHost
 import com.bitwarden.ui.platform.components.snackbar.model.rememberBitwardenSnackbarHostState
@@ -158,8 +159,8 @@ fun VaultSettingsScreen(
                 onClick = remember(viewModel) {
                     { viewModel.trySendAction(VaultSettingsAction.ImportItemsClick) }
                 },
-                withDivider = false,
-                cardStyle = CardStyle.Bottom,
+                withDivider = true,
+                cardStyle = CardStyle.Middle(),
                 modifier = Modifier
                     .testTag("ImportItemsLinkItemView")
                     .standardHorizontalMargin()
@@ -176,7 +177,24 @@ fun VaultSettingsScreen(
                     )
                 }
             }
+
+            BitwardenCheckboxRow(
+                text = stringResource(BitwardenString.skip_digital_asset_links_api_check_title),
+                checked = state.skipDigitalAssetLinks,
+                onCheckedChange = remember(viewModel) {
+                    { isChecked ->
+                        viewModel.trySendAction(VaultSettingsAction.SkipDigitalAssetLinksToggled(isChecked))
+                    }
+                },
+                withDivider = false,
+                cardStyle = CardStyle.Bottom,
+                modifier = Modifier
+                    .testTag("SkipDigitalAssetLinksCheckbox")
+                    .standardHorizontalMargin()
+                    .fillMaxWidth(),
+            )
             Spacer(modifier = Modifier.height(height = 16.dp))
+
             Spacer(modifier = Modifier.navigationBarsPadding())
         }
     }

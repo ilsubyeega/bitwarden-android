@@ -10,6 +10,7 @@ import com.bitwarden.ui.platform.manager.snackbar.SnackbarRelayManager
 import com.x8bit.bitwarden.data.platform.manager.FeatureFlagManager
 import com.x8bit.bitwarden.data.platform.manager.FirstTimeActionManager
 import com.x8bit.bitwarden.data.platform.manager.PolicyManager
+import com.x8bit.bitwarden.data.platform.repository.SettingsRepository
 import com.x8bit.bitwarden.ui.platform.model.SnackbarRelay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.combine
@@ -29,6 +30,7 @@ class VaultSettingsViewModel @Inject constructor(
     private val firstTimeActionManager: FirstTimeActionManager,
     private val featureFlagManager: FeatureFlagManager,
     private val policyManager: PolicyManager,
+    private val settingsRepository: SettingsRepository,
 ) : BaseViewModel<VaultSettingsState, VaultSettingsEvent, VaultSettingsAction>(
     initialState = run {
         val firstTimeState = firstTimeActionManager.currentOrDefaultUserFirstTimeState
@@ -37,6 +39,7 @@ class VaultSettingsViewModel @Inject constructor(
             showImportItemsChevron = featureFlagManager.getFeatureFlag(
                 key = FlagKey.CredentialExchangeProtocolImport,
             ),
+            skipDigitalAssetLinks = settingsRepository.skipDigitalAssetLinks,
         )
     },
 ) {
@@ -78,6 +81,10 @@ class VaultSettingsViewModel @Inject constructor(
         VaultSettingsAction.ImportLoginsCardCtaClick -> handleImportLoginsCardClicked()
         VaultSettingsAction.ImportLoginsCardDismissClick -> handleImportLoginsCardDismissClicked()
         is VaultSettingsAction.Internal -> handleInternalAction(action)
+        is VaultSettingsAction.SkipDigitalAssetLinksToggled -> {
+            settingsRepository.skipDigitalAssetLinks = action.isChecked
+            mutableStateFlow.update { it.copy(skipDigitalAssetLinks = action.isChecked) }
+        }
     }
 
     private fun handleInternalAction(action: VaultSettingsAction.Internal) {
@@ -154,6 +161,7 @@ class VaultSettingsViewModel @Inject constructor(
 data class VaultSettingsState(
     val showImportActionCard: Boolean,
     val showImportItemsChevron: Boolean,
+    val skipDigitalAssetLinks: Boolean = false,
 )
 
 /**
@@ -214,6 +222,11 @@ sealed class VaultSettingsAction {
      * Indicates that the user clicked the Import Items button.
      */
     data object ImportItemsClick : VaultSettingsAction()
+
+    /**
+     * Indicates the skip digital asset links checkbox was toggled.
+     */
+    data class SkipDigitalAssetLinksToggled(val isChecked: Boolean) : VaultSettingsAction()
 
     /**
      * Indicates that the user clicked the CTA on the action card.

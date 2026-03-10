@@ -81,6 +81,16 @@ class SettingsRepositoryImpl(
 
     override var appTheme: AppTheme by settingsDiskSource::appTheme
 
+    override var skipDigitalAssetLinks: Boolean by settingsDiskSource::skipDigitalAssetLinks
+    override val skipDigitalAssetLinksFlow: StateFlow<Boolean>
+        get() = settingsDiskSource
+            .skipDigitalAssetLinksFlow
+            .stateIn(
+                scope = unconfinedScope,
+                started = SharingStarted.Eagerly,
+                initialValue = settingsDiskSource.skipDigitalAssetLinks,
+            )
+
     override val appThemeStateFlow: StateFlow<AppTheme>
         get() = settingsDiskSource
             .appThemeFlow

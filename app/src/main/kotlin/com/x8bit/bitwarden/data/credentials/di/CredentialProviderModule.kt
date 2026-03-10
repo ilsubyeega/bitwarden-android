@@ -30,6 +30,7 @@ import com.x8bit.bitwarden.data.platform.manager.AssetManager
 import com.x8bit.bitwarden.data.platform.manager.ciphermatching.CipherMatchingManager
 import com.x8bit.bitwarden.data.vault.datasource.sdk.VaultSdkSource
 import com.x8bit.bitwarden.data.vault.repository.VaultRepository
+import com.x8bit.bitwarden.data.platform.repository.SettingsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -95,11 +96,13 @@ object CredentialProviderModule {
         assetManager: AssetManager,
         digitalAssetLinkService: DigitalAssetLinkService,
         privilegedAppRepository: PrivilegedAppRepository,
+        settingsRepository: SettingsRepository,
     ): OriginManager =
         OriginManagerImpl(
             assetManager = assetManager,
             digitalAssetLinkService = digitalAssetLinkService,
             privilegedAppRepository = privilegedAppRepository,
+            settingsRepository = settingsRepository,
         )
 
     @Provides

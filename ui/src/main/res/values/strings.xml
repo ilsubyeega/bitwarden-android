@@ -1220,4 +1220,5 @@ Do you want to switch to this account?</string>
     <string name="launch_browser">Launch browser</string>
     <string name="continue_without_syncing">Continue without syncing</string>
     <string name="external_link">External link</string>
+    <string name="skip_digital_asset_links_api_check_title">Skip Digital Asset Links API checks</string>
 </resources>

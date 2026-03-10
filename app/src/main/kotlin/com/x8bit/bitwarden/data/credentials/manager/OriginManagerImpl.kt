@@ -4,6 +4,7 @@ import androidx.credentials.provider.CallingAppInfo
 import com.bitwarden.network.service.DigitalAssetLinkService
 import com.bitwarden.ui.platform.base.util.prefixHttpsIfNecessary
 import com.x8bit.bitwarden.data.credentials.model.ValidateOriginResult
+import com.x8bit.bitwarden.data.platform.repository.SettingsRepository
 import com.x8bit.bitwarden.data.credentials.repository.PrivilegedAppRepository
 import com.x8bit.bitwarden.data.platform.manager.AssetManager
 import com.x8bit.bitwarden.data.platform.util.getSignatureFingerprintAsHexString
@@ -21,6 +22,7 @@ class OriginManagerImpl(
     private val assetManager: AssetManager,
     private val digitalAssetLinkService: DigitalAssetLinkService,
     private val privilegedAppRepository: PrivilegedAppRepository,
+    private val settingsRepository: SettingsRepository,
 ) : OriginManager {
 
     override suspend fun validateOrigin(
@@ -38,6 +40,10 @@ class OriginManagerImpl(
         relyingPartyId: String,
         callingAppInfo: CallingAppInfo,
     ): ValidateOriginResult {
+        if (settingsRepository.skipDigitalAssetLinks) {
+            return ValidateOriginResult.Success(null)
+        }
+
         return digitalAssetLinkService
             .checkDigitalAssetLinksRelations(
                 sourceWebSite = relyingPartyId.prefixHttpsIfNecessary(),
