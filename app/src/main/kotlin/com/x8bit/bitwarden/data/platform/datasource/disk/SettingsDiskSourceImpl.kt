@@ -48,6 +48,7 @@ private const val SHOULD_SHOW_ADD_LOGIN_COACH_MARK = "shouldShowAddLoginCoachMar
 private const val SHOULD_SHOW_GENERATOR_COACH_MARK = "shouldShowGeneratorCoachMark"
 private const val RESUME_SCREEN = "resumeScreen"
 private const val IS_DYNAMIC_COLORS_ENABLED = "isDynamicColorsEnabled"
+private const val SKIP_DIGITAL_ASSET_LINKS_KEY = "skipDigitalAssetLinks"
 private const val BROWSER_AUTOFILL_DIALOG_RESHOW_TIME = "browserAutofillDialogReshowTime"
 private const val INTRODUCING_ARCHIVE_ACTION_CARD_DISMISSED =
     "introducingArchiveActionCardDismissed"
@@ -152,6 +153,15 @@ class SettingsDiskSourceImpl(
         set(value) {
             putString(key = SYSTEM_BIOMETRIC_INTEGRITY_SOURCE_KEY, value = value)
         }
+
+    private var _skipDigitalAssetLinksFlow: MutableSharedFlow<Boolean>? = null
+    override var skipDigitalAssetLinks: Boolean
+        get() = getBoolean(SKIP_DIGITAL_ASSET_LINKS_KEY, false)
+        set(value) = saveAndEmitValue(SKIP_DIGITAL_ASSET_LINKS_KEY, value, _skipDigitalAssetLinksFlow)
+    override val skipDigitalAssetLinksFlow: Flow<Boolean>
+        get() = _skipDigitalAssetLinksFlow ?: bufferedMutableSharedFlow<Boolean>()
+            .onSubscription { emit(skipDigitalAssetLinks) }
+            .also { _skipDigitalAssetLinksFlow = it }
 
     override var appTheme: AppTheme
         get() = getString(key = APP_THEME_KEY)

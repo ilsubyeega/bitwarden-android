@@ -19,6 +19,10 @@ import javax.crypto.Cipher
  */
 @Suppress("TooManyFunctions")
 interface SettingsRepository : FlightRecorderManager {
+    /** Whether the user has opted to skip the Digital Asset Links API checks. */
+    var skipDigitalAssetLinks: Boolean
+    val skipDigitalAssetLinksFlow: StateFlow<Boolean>
+
     /**
      * The [AppLanguage] for the current user.
      */

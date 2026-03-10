@@ -10,6 +10,7 @@ import com.bitwarden.network.service.DigitalAssetLinkService
 import com.x8bit.bitwarden.data.credentials.model.ValidateOriginResult
 import com.x8bit.bitwarden.data.credentials.repository.PrivilegedAppRepository
 import com.x8bit.bitwarden.data.platform.manager.AssetManager
+import com.x8bit.bitwarden.data.platform.repository.SettingsRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -27,6 +28,9 @@ class OriginManagerTest {
 
     private val mockAssetManager = mockk<AssetManager>()
     private val mockDigitalAssetLinkService = mockk<DigitalAssetLinkService>()
+    private val mockSettingsRepository = mockk<SettingsRepository> {
+        every { skipDigitalAssetLinks } returns false
+    }
     private val mockPrivilegedAppInfo = mockk<CallingAppInfo> {
         every { isOriginPopulated() } returns true
         every { packageName } returns DEFAULT_PACKAGE_NAME
@@ -50,6 +54,7 @@ class OriginManagerTest {
         assetManager = mockAssetManager,
         digitalAssetLinkService = mockDigitalAssetLinkService,
         privilegedAppRepository = mockPrivilegedAppRepository,
+        settingsRepository = mockSettingsRepository,
     )
 
     @BeforeEach
@@ -242,6 +247,24 @@ class OriginManagerTest {
                 ),
             )
         }
+
+    @Test
+    fun `validateOrigin should return Success(null) when skipDigitalAssetLinks is true`() = runTest {
+        every { mockSettingsRepository.skipDigitalAssetLinks } returns true
+        val result = originManager.validateOrigin(
+            relyingPartyId = DEFAULT_RELYING_PARTY_ID,
+            callingAppInfo = mockNonPrivilegedAppInfo,
+        )
+        assertEquals(ValidateOriginResult.Success(null), result)
+        coVerify(exactly = 0) {
+            mockDigitalAssetLinkService.checkDigitalAssetLinksRelations(
+                sourceWebSite = any(),
+                targetPackageName = any(),
+                targetCertificateFingerprint = any(),
+                relations = any(),
+            )
+        }
+    }
 }
 
 private const val DEFAULT_PACKAGE_NAME = "com.x8bit.bitwarden"
