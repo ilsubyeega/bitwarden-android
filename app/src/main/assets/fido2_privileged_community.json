@@ -87,30 +87,6 @@
           }
         ]
       }
-    },
-    {
-      "type": "android",
-      "info": {
-        "package_name": "com.twitter.android",
-        "signatures": [
-          {
-            "build": "release",
-            "cert_fingerprint_sha256": "2A:21:4B:DF:A5:57:4E:9F:CD:A8:1F:2E:39:CA:73:90:3F:8A:F4:7E:D9:6A:41:40:91:0E:9B:F3:A3:77:24:D3"
-          }
-        ]
-      }
-    },
-    {
-      "type": "android",
-      "info": {
-        "package_name": "au.gov.vic.vicroads.digital.wallet",
-        "signatures": [
-          {
-            "build": "release",
-            "cert_fingerprint_sha256": "43:7D:81:4A:76:73:EE:91:4A:03:00:CF:31:73:70:95:48:98:4B:C7:21:C1:F6:A3:A3:8C:CA:9F:EE:F4:DF:2A"
-          }
-        ]
-      }
     }
   ]
 }

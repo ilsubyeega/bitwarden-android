@@ -41,6 +41,7 @@ class OriginManagerImpl(
         callingAppInfo: CallingAppInfo,
     ): ValidateOriginResult {
         if (settingsRepository.skipDigitalAssetLinks) {
+            Timber.v("Bypassing Digital Asset Links check due to user setting for ${callingAppInfo.packageName}")
             return ValidateOriginResult.Success(null)
         }
 
